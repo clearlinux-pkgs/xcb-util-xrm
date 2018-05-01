@@ -1,0 +1,1551 @@
+commit a485748ec1a1d2125ce25c7cca0ef6062bff8c88
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 24 18:33:55 2018 +0100
+
+    Update version
+
+commit 0d73c101022f13264605693788e06e75d5900314
+Merge: a45b3d0 64ee910
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sat Mar 24 18:31:57 2018 +0100
+
+    Merge pull request #80 from Airblader/issue-79
+    
+    Correctly collapse multiple consecutive bindings.
+
+commit 64ee910c5bcee0413e465df404af5a4b1674cfd4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 24 18:30:08 2018 +0100
+
+    Correctly collapse multiple consecutive bindings.
+    
+    As per the specification, if several bindings (".", "*") are following
+    each other, they are treated as if there was only a single binding,
+    wherein it is treated as "." if and only if all of the consecutive bindings
+    were tight ("."); otherwise, it is treated as a single loose ("*") binding.
+    
+    fixes #79
+
+commit a45b3d0bbaa94bf8a68405ab8c5c61404da464ce
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Nov 24 08:50:26 2016 +0100
+
+    Update version correctly.
+    
+    We go straight to 1.2 because 1.1 has been released on Github already.
+
+commit 47fcefd6a967dcbb005238a1dc6af409787ab552
+Merge: 38925b3 2645838
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Nov 24 08:43:55 2016 +0100
+
+    Merge pull request #72 from Airblader/bug-71
+    
+    Parse entries with empty value correctly.
+
+commit 2645838eede0d8e81e03450fff40e09b88875a3e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Nov 24 08:35:45 2016 +0100
+
+    Parse entries with empty value correctly.
+    
+    This patch fixes how an entry like
+    
+        some.component:
+    
+    is parsed. Previously, this would error out and ignore the entry,
+    but the correct behavior is to parse it and assign the empty value
+    to it. This is needed for applications to differentiate between a
+    resource not being defined and it having an empty value.
+    
+    fixes #71
+
+commit 38925b383ad968a7394337608aa3a07aab84307a
+Merge: f523662 7c35489
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 15 18:54:44 2016 +0200
+
+    Merge pull request #63 from psychon/xlib-deps
+    
+    Add a hard dependency on Xlib
+
+commit 7c354896667dfb1cca332f102ba701a6ec7b11e4
+Author: Uli Schlachter <psychon@znc.in>
+Date:   Thu Apr 14 20:54:17 2016 +0200
+
+    Add a hard dependency on Xlib
+    
+    We could do lots of magic to only compare the test results against Xlib if Xlib
+    is available, but... why? Xlib isn't that much of an uncommon dependency.
+    Everyone can easily install it and the library libxcb-xrm.so does not depend on
+    it anyway.
+    
+    Signed-off-by: Uli Schlachter <psychon@znc.in>
+
+commit ef6349997ffed3193ad0cd97c58a7750c6cb8f6e
+Author: Uli Schlachter <psychon@znc.in>
+Date:   Thu Apr 14 20:52:59 2016 +0200
+
+    Drop dependency on x11-xcb / Xlib-xcb.h
+    
+    It's unused.
+    
+    Signed-off-by: Uli Schlachter <psychon@znc.in>
+
+commit f523662b100463352830e3fb01cca9296c4cdcbf
+Merge: 0dbe018 e990f0b
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Apr 14 20:35:19 2016 +0200
+
+    Merge pull request #61 from psychon/autoconf-xlib-checks
+    
+    Autoconf xlib checks
+
+commit e990f0b9706c1ce0278008e4e37f717def2ec53d
+Author: Uli Schlachter <psychon@znc.in>
+Date:   Thu Apr 14 20:18:03 2016 +0200
+
+    Clean up linking of tests
+    
+    Previously, some of the tests were linked against stuff that they didn't
+    actually use. This commit removes these libraries.
+    
+    Additionally, this (silently (or not)) fixes a mistake of the previous commit
+    which accidentally made tests/database not link against xcb-aux even though it
+    uses xcb-aux.
+    
+    Signed-off-by: Uli Schlachter <psychon@znc.in>
+
+commit 0dbe018baefd8afa35dcb48043a4586a31c3b236
+Merge: 29ded8c 1e9ffea
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Apr 14 16:27:47 2016 +0200
+
+    Merge pull request #62 from psychon/missing-failure-check
+    
+    Check for asprintf()-failures in resolve_path()
+
+commit 1e9ffea1cdca8bf99e00964bd4deb3fab1d2a344
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Thu Apr 14 16:11:07 2016 +0200
+
+    Check for asprintf()-failures in resolve_path()
+    
+    Fixes the following warning:
+    
+    warning: ignoring return value of ‘asprintf’, declared with attribute
+    warn_unused_result [-Wunused-result]
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 374f48f6fa7f1f82c42105e42d5722db1f5afb9f
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Thu Apr 14 12:42:04 2016 +0200
+
+    Build tests conditionally
+    
+    This moves the check for x11 and x11-xcb to configure.ac. The tests are only
+    enabled if the necessary libraries are found. Additionally, this commit adds
+    --enable-tests / --disable-tests flags to configure to forcefully disable tests
+    and, more important, to make configure fail if the dependencies for the tests
+    could not be found.
+    
+    I hope someone can tell me a nicer way to implement this...
+    
+    Fixes: https://github.com/Airblader/xcb-util-xrm/issues/60
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 5178d5a550943ac68d10b266e3b6fdfc10a223d8
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Thu Apr 14 12:24:56 2016 +0200
+
+    tests_match: Remove unused include
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 29ded8c94b0ef9dba9608cedc4645e42f4883f09
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 14:05:36 2016 +0200
+
+    Raise version to 1.0
+
+commit 2da77ff63664d87ef127059ec7ad80bc8e5d565b
+Merge: bc80f38 7608bb1
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 8 13:25:02 2016 +0200
+
+    Merge pull request #59 from Airblader/bug-15-greediness
+    
+    Greediness
+
+commit 7608bb1d64168dbd2f0f912aa62f4181c56e98b4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 12:38:44 2016 +0200
+
+    Refactoring to avoid duplication.
+    
+    relates to #15
+
+commit 6db2a2255163cc742cec3d3e55769975bcb9f65e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 10:31:12 2016 +0200
+
+    Added test for multiple loose bindings.
+    
+    fixes #15
+
+commit e70191b352950f5ee75d2f7aaeb0cb95f6f04e25
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 10:24:23 2016 +0200
+
+    Added test for loose binding on a wildcard.
+    
+    relates to #15
+
+commit b412611ae4632efc11b4078d786a6b0224bdec51
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 10:24:12 2016 +0200
+
+    Use an enum for the ignore flag which makes its meaning clearer.
+    
+    relates to #15
+
+commit b4d82313eed6bb094c1d53715bc4e9e57e7689c6
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 09:58:45 2016 +0200
+
+    First rough and ugly implementation of handling greediness properly.
+    
+    relates to #15
+
+commit f89671cea588bbf07c1185e7921434c4d64ca7d9
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 09:56:06 2016 +0200
+
+    fix a typo
+
+commit 021c7b5dadb60bbe73112123d6c7d10c374a3b57
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 8 09:13:44 2016 +0200
+
+    Refactor __match_matches() into a recursive function.
+    
+    relates to #15
+
+commit bc80f380dcb145b86aa87b9e6418a4a2b2a4398d
+Merge: 4e89aa2 003196a
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Wed Apr 6 19:11:08 2016 +0200
+
+    Merge pull request #58 from Airblader/feature-54
+    
+    Limit the depth of recursive #include directives.
+
+commit 003196adb9a41d0832b731c385c6c49edae4944f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Apr 6 19:08:28 2016 +0200
+
+    Added test for #include depth limitation.
+    
+    relates to #54
+
+commit a484baaaf590bd85ef0d102d8cd77e12bf07ee47
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Apr 6 19:01:22 2016 +0200
+
+    Limit the depth of recursive #include directives.
+    
+    fixes #54
+
+commit 4e89aa22587b7109fcc739f467e1b23630241fdc
+Merge: cc57ad3 b879bfe
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Wed Apr 6 14:39:13 2016 +0200
+
+    Merge pull request #57 from Airblader/feature-46
+    
+    Added testcase for xcb_xrm_database_from_resource_manager().
+
+commit b879bfec22cf64706dcdb5c520118fc64a134b80
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Apr 6 14:33:53 2016 +0200
+
+    Added testcase for xcb_xrm_database_from_resource_manager().
+    
+    fixes #46
+
+commit cc57ad32028c7b738751217360897b1e7a68df9f
+Merge: b13149a 5b68d20
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Wed Apr 6 11:25:45 2016 +0200
+
+    Merge pull request #56 from psychon/distcheck
+    
+    Distcheck & X11-stuff
+
+commit 5b68d20a55d46ab020bd5e60842e230624377443
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:49:04 2016 +0200
+
+    Travis: Test if "make distcheck" works
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit c3b6aa60efbdacb99be07f7ce4d4ba5f8ed680d7
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:48:05 2016 +0200
+
+    Travis: Remove redundant calls to xvfb-run
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 52864924375342ef85e3b72cfac8a0f247e55992
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:46:07 2016 +0200
+
+    Automatically run tests_database under Xvfb
+    
+    tests_database is the only test requiring an X11 server. Also, that server must
+    not have a RESOURCE_MANAGER set on its root window, else the test will fail.
+    
+    The easiest way to make this work portably is to have a small wrapper script
+    that uses xvfb-run to run the test. If xvfb-run is not found, the test is
+    skipped.
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 3906e9d6f7e9a690d5c334b823aa62506185d3f4
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:38:48 2016 +0200
+
+    tests_database: Check for X11 errors
+    
+    Without this, any X11 error that is caused during the test would silently by
+    ignored.
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 2f31feab1bfa879b6383d8750be2bb550c59627b
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:33:54 2016 +0200
+
+    tests_database: Check if X11 connection works
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 2354f55ecabd2ac09a04f892eb34ffe93494a0ce
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:33:18 2016 +0200
+
+    tests_match: Remove unused X11 connection
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit 50aab5367b5bbb7cb233a2cba2bd5c8e80a52a73
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:26:04 2016 +0200
+
+    Fix "make distcheck"
+    
+    Automake supports out of tree builds (mkdir build && cd build && ../configure).
+    "make distcheck" tests if this really works. In this case, the tests are run
+    with their working directory set to the build directory (the place where
+    binaries are built (more or less)). However, the file test in
+    tests/tests_database.c wants to read files in the source directory. The path to
+    this directory is passed on by automake in $srcdir.
+    
+    This commit makes the test use this variable to figure out paths. If $srcdir is
+    not set, then "." is assumed. That way, tests can still be called by hand.
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit f968f1a3d9e9d4f5afe97fea7d0064612b35ed81
+Author: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+Date:   Wed Apr 6 10:22:37 2016 +0200
+
+    Distribute test data files
+    
+    Right now, the tarballs produced by "make dist" do not contain the data files
+    needed for the tests. Thus, e.g. "make distcheck" fails.
+    
+    Automake does not allow to include a complete directory (which can be seen as a
+    good thing since it avoids picking up files accidentally). Thus, add all the
+    data files individually to EXTRA_DIST.
+    
+    Signed-off-by: Uli Schlachter <uli.schlachter@informatik.uni-oldenburg.de>
+
+commit b13149a7720c4c694fb43932884e2a52590ea288
+Merge: 766392e 6335a07
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Wed Apr 6 10:04:06 2016 +0200
+
+    Merge pull request #55 from Airblader/feature-46-49
+    
+    Split tests into multiple files.
+
+commit 6335a0783ca7d1d88898432aed667680c4d23da6
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Apr 5 18:37:28 2016 +0200
+
+    Decrease sleep time for Travis, but add it in between all xvfb calls.
+
+commit 19fa7b90b90604eb65f3f61398d19bb27088f5f0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Apr 5 18:34:20 2016 +0200
+
+    Fix compiler warning.
+
+commit d997092081c84a735461f6748720b8ef57968a90
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Apr 5 18:34:14 2016 +0200
+
+    Add compilter flags for xcb_aux.
+
+commit cb92a3e0befe93b51d91bd80d69705229b952c94
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Apr 5 18:33:59 2016 +0200
+
+    Split tests into multiple files.
+    
+    This is a first step to clean up the test suite. This commit splits the
+    tests into multiple files.
+    
+    fixes #49
+
+commit 766392ea47b4e5c37f4ebed58adab4cf96779711
+Merge: fecbc35 34d55af
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Tue Apr 5 12:57:38 2016 +0200
+
+    Merge pull request #53 from Airblader/bug-47-2
+    
+    Resolve directories in #include statements correctly.
+
+commit 34d55afea0f0b527d664bcaec0417f0bedd57a13
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Apr 4 08:53:08 2016 +0200
+
+    Resolve directories in #include statements correctly.
+    
+    With this commit, we now resolve the directories for the files in #include
+    directives according to the specification, i.e., by handling relative
+    paths as relative to the file containing the #include directory.
+    
+    Furthermore, this fixes a couple of memory leaks showing up due to the new
+    tests.
+    
+    fixes #47
+
+commit fecbc35fa8ea6e0623fca446ff2b89506f05373f
+Merge: 05c551d 2746747
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Mon Apr 4 06:58:41 2016 +0200
+
+    Merge pull request #52 from Airblader/bug-50
+    
+    Don't export symbols that are actually internal functions.
+
+commit 2746747cbfc678a47a6ce3ba64178aba4d0e93d1
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Apr 2 22:44:08 2016 +0200
+
+    Don't export symbols that are actually internal functions.
+    
+    This commit renames (almost, see below) all functions to have a
+    "__" prefix unless they are intended to be in the API. This is
+    necessary to avoid exporting those symbols accidentally. Thanks
+    to @psychon (Uli Schlachter) for noticing this.
+    
+    There currently are two exceptions to this, which are
+     - xcb_xrm_entry_parse
+     - xcb_xrm_entry_free
+    We currently have to export those symbols as they are used to
+    unit-test the parser.
+    
+    fixes #50
+
+commit 05c551d7187916bf1b55910b21be6ef58a9136e5
+Merge: 4c87920 5ab42b6
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sat Apr 2 22:36:20 2016 +0200
+
+    Merge pull request #44 from Airblader/more-api-changes
+    
+    Remove converter functions and use out parameters and integer return …
+
+commit 5ab42b6d837724b6b1aa04fa5d9356921cff5290
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Apr 2 22:32:01 2016 +0200
+
+    Assert return code in xcb_xrm_resource_get_[bool|long].
+
+commit 9bfd9c0ce1502bf721a979f22709b88482b16303
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Apr 2 22:31:41 2016 +0200
+
+    Allow NULL input in xcb_xrm_database_from_string.
+
+commit 4c87920cfa4195c24723f842b9bfec37a2868534
+Merge: e3efbea 2c31d74
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sat Apr 2 12:58:30 2016 +0200
+
+    Merge pull request #45 from Airblader/combine-no-destroy
+    
+    Don't destroy the source database when merging two databases.
+
+commit 7b2289eb50c208ffd1383f994e1321ac164de94b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 13:15:50 2016 +0200
+
+    Remove converter functions and use out parameters and integer return codes.
+    
+    We remove the previously introduced functions xcb_xrm_convert_to_long()
+    and xcb_xrm_convert_to_bool() again in favor of changing the return type
+    of xcb_xrm_resource_get_* to int and introducing an out parameter for them
+    instead.
+    
+    This makes the result more transparent to the caller instead of masking
+    incorrect values with some default value.
+
+commit e3efbea7d3fe4bd3c6ee8fd24c81f1cddcd920c5
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Apr 2 00:05:58 2016 +0200
+
+    Add a sleep to hopefully fix Travis
+
+commit 2c31d744c3e8e8f6a086c4448c689397b656d5cc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Apr 2 00:05:58 2016 +0200
+
+    Add a sleep to hopefully fix Travis
+
+commit 5bdce69301a70127725689e0f2ce17312f7fff13
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 21:07:17 2016 +0200
+
+    Don't destroy the source database when merging two databases.
+
+commit 6864b796c4fb38f562c8f89f5c3a73925de74652
+Merge: fdd3be4 4c26571
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 1 23:56:30 2016 +0200
+
+    Merge pull request #51 from Airblader/travis
+    
+    Travis
+
+commit 4c26571140a07a07480ee8ae5ade08ce473fbb31
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 23:10:38 2016 +0200
+
+    draft
+
+commit fdd3be4b89bdd3ddfa14a50cf98eb92c90f52873
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 21:17:47 2016 +0200
+
+    Remove unnecessary (and strictly speaking wrong double-)free.
+    
+    Thanks to @psychon (Uli Schlachter) for spotting this.
+
+commit 335bbc9c51ef5eaac950266cede2225bd1c7684f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 20:55:44 2016 +0200
+
+    Prevent merging a database into itself.
+
+commit 1c83db28fbfd2979bf4610c6da2647d5b9afab08
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 20:48:52 2016 +0200
+
+    Introduce assert.
+
+commit 3986efd40860018acbb0e4745a87afe2b0a3fec9
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 20:47:51 2016 +0200
+
+    Fix filename handling.
+    
+    Thanks to @psychon (Uli Schlachter) for spotting this.
+
+commit 1766c585b9d0f8c1190d77699b7662a69dc3efa1
+Merge: 6661ee1 d017570
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 1 12:43:56 2016 +0200
+
+    Merge pull request #43 from Airblader/bug-34
+    
+    Prevent buffer overflows
+
+commit d017570c726cb987e680b8773ae6ef2dfce3ceb3
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 10:04:59 2016 +0200
+
+    Avoid overflows when parsing components.
+    
+    fixes #34
+
+commit 6661ee1349ff679c2c252fd7daa539b7ba3f46c1
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 12:03:01 2016 +0200
+
+    Document the status regarding multithreading support.
+    
+    fixes #5
+
+commit 0c5aebb1aa9612eb50e9021b7b069d6972847cfc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Apr 1 08:11:05 2016 +0200
+
+    Don't use a hardcoded buffer size when parsing an entry.
+    
+    relates to #34
+
+commit 8109b12c8cd5de98b06420f86ec6e6006cf96d99
+Merge: 3123d43 6c8ffb9
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 1 09:58:57 2016 +0200
+
+    Merge pull request #42 from stapelberg/patch-2
+    
+    docstring: fix return value on error
+
+commit 3123d4377377d67dfab6a8131af60def8a63808c
+Merge: 2ad3df6 aef0eda
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 1 09:56:56 2016 +0200
+
+    Merge pull request #41 from stapelberg/patch-1
+    
+    Reference gethostname(2), not gethostname(3p)
+
+commit 6c8ffb94c51282b8cc6f8dc1076c09059251f122
+Author: Michael Stapelberg <michael@stapelberg.de>
+Date:   Fri Apr 1 09:56:36 2016 +0200
+
+    docstring: fix return value on error
+
+commit aef0eda702460a70b3d893b37dbb1e94106effde
+Author: Michael Stapelberg <stapelberg@users.noreply.github.com>
+Date:   Fri Apr 1 09:44:07 2016 +0200
+
+    Reference gethostname(2), not gethostname(3p)
+    
+    3p is either 3posix, 3perl or 3pm. On my machine, I only have an entry of gethostname in category 2, so I assume the 3p in parens was a mistake?
+
+commit 2ad3df687af67c7cde4edfc0ecb3d37faf1a7ac1
+Merge: 35de849 a9ba79f
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Apr 1 07:59:48 2016 +0200
+
+    Merge pull request #40 from Airblader/feature-37
+    
+    Feature 37
+
+commit a9ba79fb505159448df92e4d4de0154d085996ae
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 22:57:51 2016 +0200
+
+    Fix a memory leak.
+
+commit 0aba95a6221a4c0e3ef98483f2c3e142c2202c1f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 22:57:45 2016 +0200
+
+    Fix filename.
+    
+    relates to #37
+
+commit 036b86f5bf05b55ec297c7d07b6933f7ec470d68
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 22:46:48 2016 +0200
+
+    Remove TODO for globbing
+
+commit 546bb38134ae83ab99c17af70f6d85a472692014
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 22:46:07 2016 +0200
+
+    Added xcb_xrm_database_from_default.
+    
+    fixes #37
+
+commit 35de8492037aa0bb2dc927cfd6087609fb292c85
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 21:49:45 2016 +0200
+
+    Handle NULL source database correctly when combining databases.
+    
+    fixes #39
+
+commit 73a61d4269fd88102ed2aa7d40c18af6fd8c793f
+Merge: d33f8bb baa55a6
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Mar 31 15:56:59 2016 +0200
+
+    Merge pull request #38 from Airblader/feature-35
+    
+    Feature 35
+
+commit baa55a6ea0be0babdef00f2957f588951c2210c4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 15:48:25 2016 +0200
+
+    Added access to converter utilities with dedicated API functions.
+    
+    relates to #35
+
+commit 683dfd7ccddd3081d34e20bb77f695384c8c6ffe
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 14:49:06 2016 +0200
+
+    Remove xcb_xrm_resource_t from public API.
+    
+    This patch removes xcb_xrm_resource_t and, in consequence, these:
+    - xcb_xrm_resource_get
+    - xcb_xrm_resource_value
+    - xcb_xrm_resource_value_bool
+    - xcb_xrm_resource_value_long
+    
+    In turn, the following new functions are introduced to the API:
+    - xcb_xrm_resource_get_string
+    - xcb_xrm_resource_get_bool
+    - xcb_xrm_resource_get_long
+    
+    These do mostly the same but remove the need for handling a "resource"
+    struct as the caller, thus reducing the overhead of using the API.
+    
+    relates to #35
+
+commit d33f8bb55e9738cb80f7f323ea701e0300f8cb8c
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 31 12:31:26 2016 +0200
+
+    Use https link for repository in README
+
+commit ae3901880384a915569bf8aba3af5b6f13ffa1fc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 20:33:16 2016 +0200
+
+    Various cleanups and small fixes.
+    
+    Thanks to @psychon (Uli Schlachter) for all the hints.
+
+commit a192926b6576cbb076276226a3bcc5610420a2b3
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 19:55:54 2016 +0200
+
+    Clarify how to free resource in documentation.
+    
+    Thanks to @psychon (Uli Schlachter).
+
+commit 4d8e177e9091a467f6f30efac2de4224fd11725d
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 19:54:12 2016 +0200
+
+    Don't strdup the value in xcb_xrm_resource_value().
+    
+    Thanks to @psychon (Uli Schlachter).
+
+commit b55fa8eafc8fbe5f4a1ed166b9bdbbd8584c1522
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 19:49:25 2016 +0200
+
+    Fixed typo.
+    
+    Thanks to @psychon (Uli Schlachter).
+
+commit b49fbe9a163da3b7f1cfcd95cbea2514a0df0ac0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 19:49:19 2016 +0200
+
+    Don't include externals.h in library headers.
+    
+    Thanks to @psychon (Uli Schlachter).
+
+commit 337b56f447b10a4098e61ca05760ce3554489398
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 14:35:47 2016 +0200
+
+    Remove unnecessary directives from configure.ac.
+
+commit fc2c2d4186c5bc6d352c0e1f8e757b640ed3bd5f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 14:34:09 2016 +0200
+
+    Fix compile warning
+
+commit c97746fe050bff18699b9fa549d6b6bafc1bb5e8
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 14:32:11 2016 +0200
+
+    Fix "make dist" and "make distcheck".
+    
+    Thanks to @psychon (Uli Schlachter)
+
+commit bd18659b548e22d6715be730b2160b8265f2d17a
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 14:24:01 2016 +0200
+
+    Update xcb_xrm_intro.in
+
+commit e64d03c6f2e844d8d10dfaaa9918c12ce4ad991f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 30 13:56:58 2016 +0200
+
+    Don't ship test-driver since it's installed by autoreconf.
+    
+    Thanks to @psychon (Uli Schlachter).
+
+commit eacfaddde102fac2c877d82a173113dd9c35b829
+Merge: d6dcdfb 33b5c3a
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sun Mar 27 20:21:09 2016 -0400
+
+    Merge pull request #32 from Airblader/bug-30
+    
+    Do not use err() in library.
+
+commit 33b5c3a26adf09f28748f9035919a146431f9361
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 27 20:20:40 2016 -0400
+
+    Do not use err() in library.
+    
+    We don't want to exit the application from within a library due to memory
+    allocation failures, so we instead try to fail gracefully.
+    
+    fixes #30
+
+commit d6dcdfbd56b4b4634c2553c9a976fc0087d74fc8
+Merge: 0b07ac9 3ff8354
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Mar 25 13:04:16 2016 -0400
+
+    Merge pull request #31 from Airblader/bug-29
+    
+    Read file in a single go.
+
+commit 3ff83541b94382303bf5c0abd7f0710d32235736
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 25 12:47:18 2016 -0400
+
+    Read file in a single go.
+    
+    fixes #29
+
+commit 0b07ac9c66a18e006056814ac19df828d2e50a12
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Mar 21 12:16:30 2016 -0400
+
+    Adapted API for converting resource values.
+
+commit deef8087f82855d962257f413396c2b42954f97c
+Merge: 69ebfe8 40a85c9
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Mon Mar 21 01:45:32 2016 -0400
+
+    Merge pull request #28 from Airblader/feature-24
+    
+    Feature 24
+
+commit 40a85c9c4184054d8e87ad2da5fc7abf6f6ca9dc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Mar 21 01:43:03 2016 -0400
+
+    Skip quotation marks and whitespace at the end.
+    
+    relates to #24
+
+commit 19bb660e3248c4039cf220828254d2d294b3e94b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Mar 21 01:35:21 2016 -0400
+
+    Handle "#include" directives.
+    
+    This commit introduces support for the "#include" directive by loading
+    the respective file and parsing it in-place.
+    
+    relates to #24
+
+commit abb4b125228c3cceb00f9998354082320f61e6b0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Mar 21 01:34:48 2016 -0400
+
+    Added API to read a database from disk.
+    
+    We use fstat as this will also follow symlinks (unlike fopen), which is a
+    likely usecase for people using dotfiles.
+    
+    relates to #24
+
+commit 69ebfe8cc776e729f4dd52edf0985606974397f2
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 22:43:19 2016 -0400
+
+    Clarify in API functions returning strings who owns the memory.
+
+commit 78f27215582d50e29039ed3a136be05cce8bb5b3
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 22:38:56 2016 -0400
+
+    Change API to use double pointers to databases on mutation.
+    
+    This reflects the Xlib API more closely and allows us to automatically
+    create a new database by passing NULL.
+
+commit 301c4b351e348dc45a71f4452c32265d6646844b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 21:20:39 2016 -0400
+
+    Clean up some declarations.
+
+commit 319d3959f11a6b044afe90a3b686231c19639069
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 21:20:10 2016 -0400
+
+    Revert "Remove -Wdeclaration-after-statement and clean up code accordingly."
+    
+    This reverts commit e0331666a94cabc74edc793e888ea5edf1c197c9.
+
+commit e0331666a94cabc74edc793e888ea5edf1c197c9
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 21:14:52 2016 -0400
+
+    Remove -Wdeclaration-after-statement and clean up code accordingly.
+
+commit 978d60ecd47bb099a92958efb1317b6afa153011
+Merge: 90b72a0 e586d5e
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sun Mar 20 19:26:00 2016 -0400
+
+    Merge pull request #27 from Airblader/feature-19
+    
+    Added API function to combine databases.
+
+commit e586d5e671bd97170f2fb196d88917351e107e2b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 19:25:32 2016 -0400
+
+    Added API function to combine databases.
+    
+    fixes #19
+
+commit 90b72a0319e1faf464f97ab11330f7a29abc988a
+Merge: 2c27582 987627e
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Sun Mar 20 16:25:43 2016 -0400
+
+    Merge pull request #26 from Airblader/feature-23
+    
+    Feature 23
+
+commit 987627e83bc65c2b9fe9134c76ac197f2de3c7d7
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Mar 20 16:22:43 2016 -0400
+
+    Added tests and API to convert database to a string.
+    
+    relates to #23
+
+commit e6f667038e9124a61ab0b3c95e7f069ae08498fb
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 19 15:35:40 2016 -0400
+
+    Added asserts.
+    
+    relates to #23
+
+commit 559b631bc25ff7b443a8ba2ab526a9ba802a2905
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 19 15:32:03 2016 -0400
+
+    Added testcase for magic value within value.
+
+commit 583cd039fd865fe6b16efc520b0a3b371671661d
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 19 15:31:54 2016 -0400
+
+    Added API functions for setting resources in a database.
+    
+    This commit adds two new API functions that allow adding a single resource
+    to a database.
+    
+    fixes #23
+
+commit 9b2d50557d9b61b3ed6369636e3a7a0b06f9dbe2
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 19 15:30:17 2016 -0400
+
+    Fix NULL access segmentation fault.
+    
+    The tests currently don't catch this because xcb_xrm_resource_get() returns
+    early. We need to check for NULL and return an error immediately.
+
+commit 2c275823cfd15e53a917888c2b4afe0d8df5c9c2
+Merge: b004e73 ea3918e
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Mar 18 11:24:00 2016 -0400
+
+    Merge pull request #25 from Airblader/bug-22
+    
+    Filter out duplicates.
+
+commit ea3918e1cbaae0661a1c82c368630ea5944fb112
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 18 11:23:12 2016 -0400
+
+    Filter out duplicates.
+    
+    We need to filter duplicate entries to be spec-conform. This will also be
+    needed for future APIs that allow the manipulation of databases.
+    
+    fixes #22
+
+commit b004e730124fd83f0507575534d2776b68018e32
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 18 00:51:04 2016 -0400
+
+    Removed NEWS file.
+
+commit 18331f87788cc954bb88c672a2c20e6bc1cbba4e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 18 00:41:02 2016 -0400
+
+    Enable test which now works.
+
+commit b1ae5c79aa922c5f8c849eddd89a69f6722d6b8d
+Merge: 706ddea 857d184
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Mar 18 00:14:33 2016 -0400
+
+    Merge pull request #21 from Airblader/feature-db-api
+    
+    Reworked the entire API.
+
+commit 857d18441d9c5b1f7811e4b000a92985cfdd2068
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 18 00:11:41 2016 -0400
+
+    Reworked the entire API.
+    
+    This commit changes the API from the ground up (of course, in a breaking
+    way). We don't actually have much of a reason to use a "context" since
+    most of what we do does not directly concern X (or xcb for that matter).
+    The only case where we need a X connection is when fetching the resource
+    manager content from the root window.
+    
+    Therefore, we move from having a context object as the central concept of
+    this library to using the database struct for this. This is closer related
+    to how the Xlib equivalent works and will also allow a more straight-forward
+    API when introducing the APIs to combine / merge / manipulate databases.
+
+commit 706ddead92ca6c0f95a1bdebd5d5a26e0b696525
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 18:28:17 2016 -0400
+
+    Updated NEWS
+
+commit 673064fbd917bc7a3f2dec0126d391608acbcce0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 18:22:47 2016 -0400
+
+    Fix memory leak when using Xlib in tests.
+
+commit b8c707ee2b43d08e44c3bbc29a86ed7e2daa6db7
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 17:11:07 2016 -0400
+
+    Added more real-world examples as testcases.
+
+commit 54102755c28937570825129bada1c7076aed92ee
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 17:00:33 2016 -0400
+
+    Handle ':' in the beginning of a resource explicitly.
+    
+    This resolves a leftover TODO comment. Back when it was written, it
+    was assumed that a ':' would be a valid character in a resource name.
+    However, this is not the case, so we can simply reject in this
+    situation. A test case for this already existed, but this makes the
+    reject more explicit.
+
+commit 0ded840923459ec3b69625a61ce68e78f3df861a
+Merge: 9793858 1a35b7c
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Mar 17 16:55:31 2016 -0400
+
+    Merge pull request #18 from Airblader/feature-xlib
+    
+    Feature xlib
+
+commit 1a35b7c869cb69284a97f97caa8da917bcbccc71
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 16:55:16 2016 -0400
+
+    Compare results against Xlib.
+    
+    As we, at least for the most part, want the same results as Xlib returns,
+    we now also compare our results against Xlib. However, there is one notable
+    exception where Xlib does not follow the specification while we, at the
+    same time, do want to follow it.
+
+commit eb87898749bf97236cef65c98a2dd992f948e0cc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 16:30:10 2016 -0400
+
+    Reorganize tests.
+
+commit 979385877a0de8c78d35f4dc8f0c0208672c2306
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 11:33:34 2016 -0400
+
+    Ignore lines starting with '!' and '#'.
+    
+    We skip lines that are comments or directives. We have to expect these in
+    case the caller wants to parse their own string (otherwise, xrdb took care
+    of removing comments already).
+    
+    While ignoring comments is safe, a caller may expect include directives
+    to be handled. However, at least for now this is not supported.
+
+commit da2e5b4377891b9f7ee953fb99b825caa103c384
+Merge: c9f84a7 33e2cac
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Thu Mar 17 11:29:08 2016 -0400
+
+    Merge pull request #17 from Airblader/bug-10
+    
+    Bug 10
+
+commit 33e2cac36cf300296042726ba7275b5a0559a9d7
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 11:28:30 2016 -0400
+
+    Implement line continuation.
+    
+    This patch introduces line continuation via '\' + newline as described in
+    the specification.
+    
+    fixes #10
+
+commit 559bac957efc04e47cb98b73241058a40c74ecf4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Thu Mar 17 11:06:23 2016 -0400
+
+    Parse special values correctly.
+    
+    This commit parses the magic values starting with a '\' correctly:
+    - '\ ' → ' '
+    - '\' + tab → tab
+    - '\n' → newline
+    - '\\' → '\'
+    - '\xyz' (with x,y,z integers 0–7) → corresponding character code
+    
+    relates to #10
+
+commit c9f84a73dedc664ad830e3ae94cd18b9f5443b60
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 22:38:06 2016 -0400
+
+    Added Doxyfile
+
+commit 797ff533e3e8b73c260477038cb300f89563ec04
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 22:25:28 2016 -0400
+
+    Added documentation for the API.
+
+commit 07e8fcc99b07e8294b3a87eee40045f5d7dc8e83
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 21:48:31 2016 -0400
+
+    Added test for #14.
+    
+    Issue #14 was fixed with the previous commit. This commit simply
+    adds a test for it.
+    
+    fixes #14
+
+commit db3a914375fb914d339f3e124e0bcfeb97b635d0
+Merge: 26b16d0 1aa5814
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Wed Mar 16 21:45:11 2016 -0400
+
+    Merge pull request #16 from Airblader/feature-fix-spec
+    
+    Update parser and algorithms for spec-conform model.
+
+commit 1aa58141d24f8010543ace61e093b43004103ece
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 21:44:48 2016 -0400
+
+    Update parser and algorithms for spec-conform model.
+    
+    This commit changes the model xcb-util-xrm uses to represent entries.
+    Previously, we considered both '?' and '*' (separate) components. However,
+    only '?' is actually a component on its own, while '*' is just a type of
+    binding between components (much like '.').
+    
+    For example, this also means that while 'a*b' is correct, 'a?b' is not and
+    must rather be 'a.?.b' (or 'a*?.b' etc.).
+    
+    Therefore, we clean up our internal model and correctly distinguish between
+    the binding type and a "normal" component versus a wildcard. This requires
+    both a change in the parser and in the algorithm implementation.
+    
+    On top, this commit introduced proper validation of the characters used
+    in component names, conforming to the spec. Lastly, we clean up the tests
+    here and make them easier to read.
+
+commit 26b16d041a970e0cdc71f10f6780d77ef16fe16b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 13:41:36 2016 -0400
+
+    Remove res_type from API.
+
+commit 1e13165f3a3cd500698eada2afce715058cd36dc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 13:38:09 2016 -0400
+
+    Make xcb_xrm_database_from_string public.
+
+commit 447f370261304eccf05af87ffac0f94b3e62e24b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 13:36:31 2016 -0400
+
+    Rename API functions.
+
+commit af961a5561424ca7de711df40444231a0c38f489
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Mar 16 13:02:10 2016 -0400
+
+    Hide struct definition and introduce converter functions.
+    
+    For a cleaner API and to avoid breakage upon implementation changes, we
+    move the struct definition back from the public API to the internal
+    definitions. This patch also introduces two functions to retrieve the
+    (string) value of a resource as well as convert a resource value into an
+    integer.
+    
+    fixes #3
+
+commit 007c9886054372990b480427fb75e14bf20c84d1
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Mar 15 14:56:15 2016 -0400
+
+    Return error if resources could not be read
+
+commit a6a48d860611aadc17f091c1f250c22cb793d262
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Mar 15 14:53:12 2016 -0400
+
+    Properly read the entire RESOURCE_MANAGER string.
+
+commit 2283b8ebde0b7b9330f1cccc0c5323e75938a3d6
+Merge: eeef8ea cdfe8c6
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Tue Mar 15 13:51:01 2016 -0400
+
+    Merge pull request #9 from Airblader/feature-7
+    
+    Validate that the name and class query strings contain the same numbe…
+
+commit cdfe8c6ca96ded38c9f155929d6950a3788d7aee
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Tue Mar 15 13:50:29 2016 -0400
+
+    Validate that the name and class query strings contain the same number of components.
+    
+    The algorithm currently relies on name and class query string to consist
+    of the same number of components (if a class string is given).
+    
+    fixes #7
+
+commit eeef8ea70d13e025854d0d84859814434cfc9fee
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Mar 14 14:00:22 2016 -0400
+
+    Move struct definition
+
+commit bf256b316653e1818c2fdf764118ff5528e4612f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Mar 12 16:31:50 2016 -0500
+
+    Proper algorithm implementation.
+    
+    This commit is based on the previous collaboration commit, but cleans
+    the implementation up through a major refactoring of the code.
+    
+    Furthermore, this commit introduces proper support for all precedence
+    rules in the algorithm as well as an implementation for taking care of
+    the second query parameter (class string).
+    
+    Lastly, this commit fixes memory leaks introduced previously.
+
+commit 6061e18c011b35ea6fba8df4aa34f9fa248f09bd
+Author: Urs Schoenenberger <urs.schoenenberger@tngtech.com>
+Date:   Fri Mar 11 12:18:43 2016 +0100
+
+    Reimplement matching and a basic precedence algorithm.
+    
+    This patch is a collaboration of Urs Schönenberger, Sven Käbisch and
+    Ingo Bürk. It (re-)implements the basic matching algorithm as well
+    as a draft for the precedence rules.
+
+commit 53013ada2c494f4913c87e6553be8f89df3ba5de
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Mar 11 10:13:32 2016 +0100
+
+    Remove first draft again
+
+commit 1ab68f710e859f2d95ab847c3b735863d6b4cd49
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 29 13:37:18 2016 +0100
+
+    Added handling for '?' in algorithm.
+
+commit d210681e245def4e91c75873b9e87df2967b2ac5
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 29 13:25:03 2016 +0100
+
+    Rename for clarity
+
+commit 7863ac56b850cfa5c1a56faac91754562dbbf09b
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 29 12:59:56 2016 +0100
+
+    Added more basic tests
+
+commit 748c203c4040063b4d11a20a3dc135966b43e4d0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 29 12:49:11 2016 +0100
+
+    Enhance tests for xcb_xrm_resource_get() being unsuccessful
+
+commit c4c4d4147081ebaa7a50555ce58dcccb6b518bf2
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 29 07:54:54 2016 +0100
+
+    Avoid segfault when the filtered list is empty.
+
+commit df94b9850a60b2879886e494097d4e4d6c3af6ac
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Wed Jan 27 21:48:01 2016 +0100
+
+    Implement first filtering algorithm (without precedence rules).
+
+commit 2e81bd28199d59317f24188622e4d4ba0bf28dcc
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Jan 25 20:36:54 2016 +0100
+
+    Rename functions to adhere to a common pattern.
+
+commit d38b4fef94fd00efe0aaae738e0ea5bca005b9c4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Jan 25 20:07:20 2016 +0100
+
+    Parse the input in xcb_xrm_get_resource()
+
+commit a850da7c6409f845eed77ba586c89de3690a4e38
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Jan 25 19:57:30 2016 +0100
+
+    Change no_wildcards into resource_only and adapt implementation and tests
+    since in the case of resource strings used for querying, we don't actually
+    want there to be a ':' followed by a value.
+
+commit acb618d999b885870d52e2ecf73c7fdafd79e21a
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Mon Jan 25 15:10:25 2016 +0100
+
+    Add message for testing xcb_xrm_get_resource().
+
+commit 1a5326e69792b5282f69c396893256455a05dc83
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 22:11:39 2016 +0100
+
+    Remove TODO that was taken care of already.
+
+commit 05d19cf1dcc6dd9c1dfbd4c1523e87467331dd75
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 22:10:01 2016 +0100
+
+    Remove Travis
+
+commit f689fe83555f5027e367195789cc939092d87fa4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 22:06:31 2016 +0100
+
+    Implemented first basic version of querying a resource value.
+
+commit 7b43bf54363cabef48e715f9be6c36a8ad4efb90
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 21:05:34 2016 +0100
+
+    Remove unnecessary xproto flags
+
+commit 5cae4656684f495133f10120d97dea77df443823
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 18:10:17 2016 +0100
+
+    Fix introduced memory leak
+
+commit 9eb3de8110fa9d1e1dab56910774f454d0085aa9
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 18:07:21 2016 +0100
+
+    Persist the parsed resource manager string entries.
+
+commit 172bae24e878edefb7067975f8f4a192ac7fb949
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:40:26 2016 +0100
+
+    Copy documentation for function to source file.
+
+commit 66dd461fae752a46eeec43ad550798d08264b181
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:38:54 2016 +0100
+
+    Add some documentation to entry.c.
+
+commit bca42cd60734cdee67189897f4295a194d368ce0
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:33:47 2016 +0100
+
+    Introduce scalloc and use it everywhere.
+    
+    This means we also error out on memory failure now, which is reasonable.
+
+commit 873527266c7a5c730e86cb508510bff6472c3201
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:23:49 2016 +0100
+
+    Implement the no_wildcards argument that does not allow wildcards to be
+    used in resource names.
+
+commit e7ad24a9ff067c83ddf709b6473294f253d26725
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:14:43 2016 +0100
+
+    Structure test cases a little bit.
+
+commit bf806fa914bae2d6b0a107ee77e68f6a937e6c8c
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:10:38 2016 +0100
+
+    Refactor the previous commit.
+
+commit 73c29b7f2542c479b187e91c54a673044c78b2d4
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 24 13:08:40 2016 +0100
+
+    Treat '.', '?' and '*' as normal characters when they appear in a value.
+
+commit 08ae0f9aba35155a361e6d377e36cbafd59ccc8f
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Jan 23 11:04:27 2016 +0100
+
+    Print useful information for failing tests.
+
+commit 57920f07d6e3beaa025572d6ed52005c4b4c63db
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Jan 23 11:04:18 2016 +0100
+
+    Consolidate erroring out in entry parser.
+
+commit b801a2f1ee6dfafa0fd0b1b14f5aafd80e725c71
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sat Jan 23 10:59:41 2016 +0100
+
+    Validate entries after parsing.
+
+commit 4dd6d02f036f20255e326ffb0aa9b87f596ce5d5
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 21:36:04 2016 +0100
+
+    draft
+
+commit 9faa0b15b17ee27e92ec9f4df8dca2e07507a6ad
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 21:15:59 2016 +0100
+
+    Fix memory leak in test.
+
+commit 1e36fd16b282abe255e4fdc21462298c935ef7c8
+Merge: d93794a 576951f
+Author: Ingo Bürk <admin@airblader.de>
+Date:   Fri Jan 22 20:43:58 2016 +0100
+
+    Merge pull request #2 from Airblader/feature-travis
+    
+    Fix build and add Travis config.
+
+commit 576951ff51b14ef7eaaa253e399351cceffc784c
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 20:17:47 2016 +0100
+
+    Fix build and add Travis config.
+    
+    resolves #1
+
+commit d93794ac50b7b4c7120884d4715d8d96c9de87f6
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 17:16:54 2016 +0100
+
+    Ignore subsequent '*' placeholders.
+
+commit b648eba987702eb85514daa7eb851cacde48d27e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 17:06:14 2016 +0100
+
+    Introduce some first tests and consolidate Makefiles.
+
+commit 88f263123cde757a53d53ace9dcd8f0229ecc313
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 14:05:57 2016 +0100
+
+    Introduce a wrapper for strdup() error handling and use it.
+
+commit 9847d48dd6bbed65cd1cb67d49b714374fde44e1
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 13:58:06 2016 +0100
+
+    Split source files and reorganize code.
+
+commit 5de78c097ce9e112d264ea39479f7b731ffb8a60
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 13:44:28 2016 +0100
+
+    Split header files into different files.
+
+commit 4b3dd6945c63cce75df14f40f60b2265bc9c239e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 13:26:58 2016 +0100
+
+    Implement a first version of an entry parser.
+
+commit f09d10c91137240ea10e5ff030ac2cb3f8c62e5e
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Fri Jan 22 13:26:16 2016 +0100
+
+    Ignore coredumps
+
+commit fc5fe61e7aaca0c5ac9c3b608b2413e51558e244
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 17 18:03:28 2016 +0100
+
+    Parse the root window's resource manager string.
+
+commit 4850bb8e1f2db0f026d0f38155913999b445c388
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 17 15:26:55 2016 +0100
+
+    Added source files and basic API.
+
+commit 8bd391fdb597b0ef067b797541c5af7aa35e99ba
+Author: Ingo Bürk <ingo.buerk@tngtech.com>
+Date:   Sun Jan 17 13:13:26 2016 +0100
+
+    Initial commit.
