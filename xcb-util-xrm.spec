@@ -4,13 +4,14 @@
 #
 Name     : xcb-util-xrm
 Version  : 1.3
-Release  : 3
+Release  : 4
 URL      : https://github.com/Airblader/xcb-util-xrm/releases/download/v1.3/xcb-util-xrm-1.3.tar.bz2
 Source0  : https://github.com/Airblader/xcb-util-xrm/releases/download/v1.3/xcb-util-xrm-1.3.tar.bz2
 Summary  : XCB X resource manager utility functions
 Group    : Development/Tools
 License  : MIT
-Requires: xcb-util-xrm-lib
+Requires: xcb-util-xrm-lib = %{version}-%{release}
+Requires: xcb-util-xrm-license = %{version}-%{release}
 BuildRequires : doxygen
 BuildRequires : graphviz
 BuildRequires : pkgconfig(x11)
@@ -30,8 +31,9 @@ the X protocol but which have traditionally been provided by Xlib.
 %package dev
 Summary: dev components for the xcb-util-xrm package.
 Group: Development
-Requires: xcb-util-xrm-lib
-Provides: xcb-util-xrm-devel
+Requires: xcb-util-xrm-lib = %{version}-%{release}
+Provides: xcb-util-xrm-devel = %{version}-%{release}
+Requires: xcb-util-xrm = %{version}-%{release}
 
 %description dev
 dev components for the xcb-util-xrm package.
@@ -40,33 +42,53 @@ dev components for the xcb-util-xrm package.
 %package lib
 Summary: lib components for the xcb-util-xrm package.
 Group: Libraries
+Requires: xcb-util-xrm-license = %{version}-%{release}
 
 %description lib
 lib components for the xcb-util-xrm package.
 
 
+%package license
+Summary: license components for the xcb-util-xrm package.
+Group: Default
+
+%description license
+license components for the xcb-util-xrm package.
+
+
 %prep
 %setup -q -n xcb-util-xrm-1.3
+cd %{_builddir}/xcb-util-xrm-1.3
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1525195418
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604356803
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1525195418
+export SOURCE_DATE_EPOCH=1604356803
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/xcb-util-xrm
+cp %{_builddir}/xcb-util-xrm-1.3/COPYING %{buildroot}/usr/share/package-licenses/xcb-util-xrm/9008b5fa86f4e9ba81af97d44ac8400bde6ca5c6
 %make_install
 
 %files
@@ -82,3 +104,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/lib64/libxcb-xrm.so.0
 /usr/lib64/libxcb-xrm.so.0.0.0
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/xcb-util-xrm/9008b5fa86f4e9ba81af97d44ac8400bde6ca5c6
